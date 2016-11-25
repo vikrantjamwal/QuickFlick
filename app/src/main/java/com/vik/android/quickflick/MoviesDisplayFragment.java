@@ -12,11 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MoviesDisplayFragment extends Fragment {
-
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    private ViewPager mViewPager;
 
     public MoviesDisplayFragment() {
 
@@ -31,52 +30,51 @@ public class MoviesDisplayFragment extends Fragment {
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getActivity().getSupportFragmentManager());
-
-        mViewPager = (ViewPager) rootView.findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+        if (viewPager != null) {
+            setupViewPager(viewPager);
+        }
 
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(viewPager);
 
         return rootView;
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private void setupViewPager(ViewPager viewPager) {
+        Adapter adapter = new Adapter(getActivity().getSupportFragmentManager());
+        adapter.addFragment(new PopularMovieFragment(), "Popular");
+        adapter.addFragment(new TopRatedMovieFragment(), "Top Rated");
+        adapter.addFragment(new FavouriteMovieFragment(), "Favourite");
+        viewPager.setAdapter(adapter);
+    }
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
             super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
         }
 
         @Override
         public Fragment getItem(int position) {
-            if(position == 0)
-                return new PopularMovieFragment();
-            else if(position == 1)
-                return new TopRatedMovieFragment();
-            else if(position == 2)
-                return new FavouriteMovieFragment();
-            else
-                return null;
+            return mFragments.get(position);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return mFragments.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Popular";
-                case 1:
-                    return "Top Rated";
-                case 2:
-                    return "Favourite";
-            }
-            return null;
+            return mFragmentTitles.get(position);
         }
     }
 }

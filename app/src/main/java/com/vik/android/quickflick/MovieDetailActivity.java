@@ -2,6 +2,7 @@ package com.vik.android.quickflick;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -15,4 +16,16 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

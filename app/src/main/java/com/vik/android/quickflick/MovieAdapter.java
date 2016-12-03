@@ -2,6 +2,8 @@ package com.vik.android.quickflick;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +21,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     private List<Movie> mMovies = new ArrayList<Movie>();
     private Context mContext;
-    private View mView;
 
     public MovieAdapter(Context context){
         this.mContext = context;
@@ -48,9 +49,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             @Override
             public void onClick(View v) {
                 Log.e("ABC", mMovies.get(holder.getAdapterPosition()).getOriginalTitle());
-                Intent intent = new Intent(mContext, MovieDetailActivity.class);
-                intent.putExtra("movie_object", mMovies.get(holder.getAdapterPosition()));
-                mContext.startActivity(intent);
+                if(MainActivity.TWO_PANE){
+                    Bundle args = new Bundle();
+                    args.putParcelable("movie", mMovies.get(holder.getAdapterPosition()));
+
+                    MovieDetailFragment fragment = new MovieDetailFragment();
+                    fragment.setArguments(args);
+
+                    ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.movie_detail_container, fragment, MainActivity.DETAILFRAGMENT_TAG)
+                            .commit();
+                }else {
+                    Intent intent = new Intent(mContext, MovieDetailActivity.class);
+                    intent.putExtra("movie", mMovies.get(holder.getAdapterPosition()));
+                    mContext.startActivity(intent);
+                }
             }
         });
     }
@@ -66,7 +79,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
         public MovieViewHolder(View itemView) {
             super(itemView);
-            mView = itemView;
             posterImage = (ImageView) itemView.findViewById(R.id.movie_poster);
         }
     }

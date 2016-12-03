@@ -11,8 +11,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         if (savedInstanceState == null) {
+
+            Bundle args = new Bundle();
+            args.putParcelable("movie", getIntent().getExtras().getParcelable("movie"));
+
+            MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_detail, new MovieDetailFragment())
+                    .add(R.id.movie_detail_container, fragment)
                     .commit();
         }
     }

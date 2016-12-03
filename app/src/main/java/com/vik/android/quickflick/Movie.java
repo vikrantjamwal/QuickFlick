@@ -11,12 +11,6 @@ public class Movie implements Parcelable {
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
-    @SerializedName("overview")
-    @Expose
-    private String overview;
-    @SerializedName("release_date")
-    @Expose
-    private String releaseDate;
     @SerializedName("id")
     @Expose
     private int id;
@@ -26,18 +20,12 @@ public class Movie implements Parcelable {
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
-    @SerializedName("vote_average")
-    @Expose
-    private double voteAverage;
 
     protected Movie(Parcel in) {
         posterPath = in.readString();
-        overview = in.readString();
-        releaseDate = in.readString();
         id = in.readInt();
         originalTitle = in.readString();
         backdropPath = in.readString();
-        voteAverage = in.readDouble();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -58,22 +46,6 @@ public class Movie implements Parcelable {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
     }
 
     public int getId() {
@@ -100,14 +72,6 @@ public class Movie implements Parcelable {
         this.backdropPath = backdropPath;
     }
 
-    public double getVoteAverage() {
-        return voteAverage;
-    }
-
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -116,11 +80,8 @@ public class Movie implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(posterPath);
-        parcel.writeString(overview);
-        parcel.writeString(releaseDate);
         parcel.writeInt(id);
         parcel.writeString(originalTitle);
         parcel.writeString(backdropPath);
-        parcel.writeDouble(voteAverage);
     }
 }

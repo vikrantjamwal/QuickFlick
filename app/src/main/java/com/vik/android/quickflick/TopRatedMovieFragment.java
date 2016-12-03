@@ -60,17 +60,19 @@ public class TopRatedMovieFragment extends Fragment {
 
         apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mMovies = savedInstanceState.getParcelableArrayList(MOVIES_KEY);
             movieAdapter.setMovies(mMovies);
             mPageNo = savedInstanceState.getInt(PAGE_KEY);
-        }else {
+        } else {
             Call<Result> call = apiService.getTopRatedMovies(1, ApiClient.API_KEY);
             call.enqueue(new Callback<Result>() {
                 @Override
                 public void onResponse(Call<Result> call, Response<Result> response) {
                     mMovies = response.body().getResults();
-                    movieAdapter.setMovies(mMovies);
+                    if (mMovies != null && !mMovies.isEmpty()) {
+                        movieAdapter.setMovies(mMovies);
+                    }
                 }
 
                 @Override
@@ -100,14 +102,16 @@ public class TopRatedMovieFragment extends Fragment {
     }
 
     public void loadNextDataFromApi(int offset) {
-        Log.e("GAG", ""+offset);
+        Log.e("GAG", "" + offset);
         Call<Result> call = apiService.getTopRatedMovies(offset, ApiClient.API_KEY);
         call.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 List<Movie> movies = response.body().getResults();
                 mMovies.addAll(movies);
-                movieAdapter.setMovies(mMovies);
+                if (mMovies != null && !mMovies.isEmpty()) {
+                    movieAdapter.setMovies(mMovies);
+                }
             }
 
             @Override

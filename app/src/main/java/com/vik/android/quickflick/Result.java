@@ -20,7 +20,6 @@ public class Result {
     @Expose
     private int totalPages;
 
-
     public int getPage() {
         return page;
     }

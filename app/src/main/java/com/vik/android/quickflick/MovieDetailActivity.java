@@ -13,7 +13,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             Bundle args = new Bundle();
-            args.putParcelable("movie", getIntent().getExtras().getParcelable("movie"));
+            args.putParcelable("movie_key", getIntent().getExtras().getParcelable("movie_key"));
 
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(args);

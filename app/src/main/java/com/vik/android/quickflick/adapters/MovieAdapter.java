@@ -1,4 +1,4 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,11 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.vik.android.quickflick.MainActivity;
+import com.vik.android.quickflick.pojo.Movie;
+import com.vik.android.quickflick.MovieDetailActivity;
+import com.vik.android.quickflick.MovieDetailFragment;
+import com.vik.android.quickflick.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                             .commit();
                 }else {
                     Intent intent = new Intent(mContext, MovieDetailActivity.class);
-                    intent.putExtra("movie", mMovies.get(holder.getAdapterPosition()));
+                    intent.putExtra("movie_key", mMovies.get(holder.getAdapterPosition()));
                     mContext.startActivity(intent);
                 }
             }

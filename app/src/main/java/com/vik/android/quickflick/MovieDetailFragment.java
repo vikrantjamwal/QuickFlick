@@ -1,7 +1,11 @@
 package com.vik.android.quickflick;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.vik.android.quickflick.adapters.ReviewAdapter;
+import com.vik.android.quickflick.adapters.TrailerAdapter;
+import com.vik.android.quickflick.data.MovieContract.MovieEntry;
+import com.vik.android.quickflick.network.ApiClient;
+import com.vik.android.quickflick.network.ApiInterface;
+import com.vik.android.quickflick.pojo.Movie;
+import com.vik.android.quickflick.pojo.MovieItem;
+import com.vik.android.quickflick.pojo.Review;
+import com.vik.android.quickflick.pojo.ReviewResult;
+import com.vik.android.quickflick.pojo.Trailer;
+import com.vik.android.quickflick.pojo.TrailerResult;
+import com.vik.android.quickflick.utility.ItemOffsetDecoration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,16 +65,32 @@ public class MovieDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
+    View.OnClickListener fabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ContentValues values = new ContentValues();
+            values.put(MovieEntry.COLUMN_MOVIE_TITLE, mMovie.getOriginalTitle());
+            values.put(MovieEntry.COLUMN_MOVIE_ID, mMovie.getId());
+            values.put(MovieEntry.COLUMN_MOVIE_POSTER, mMovie.getPosterPath());
+
+            Uri rowId = getActivity().getContentResolver().insert(MovieEntry.CONTENT_URI, values);
+            Toast.makeText(getActivity(), "Fab is pressed "+ContentUris.parseId(rowId), Toast.LENGTH_SHORT).show();
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
         if(arguments != null){
-            mMovie = arguments.getParcelable("movie");
+            mMovie = arguments.getParcelable("movie_key");
         }
 
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(fabClickListener);
 
         if(mMovie != null) {
 

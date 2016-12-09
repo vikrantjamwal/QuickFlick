@@ -1,4 +1,4 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.vik.android.quickflick.R;
+import com.vik.android.quickflick.pojo.Trailer;
 
 import java.util.ArrayList;
 

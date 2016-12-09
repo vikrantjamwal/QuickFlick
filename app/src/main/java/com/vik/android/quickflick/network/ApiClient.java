@@ -1,4 +1,6 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.network;
+
+import com.vik.android.quickflick.BuildConfig;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

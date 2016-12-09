@@ -1,7 +1,9 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.utility;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+
+import com.vik.android.quickflick.R;
 
 public class Utility {
 

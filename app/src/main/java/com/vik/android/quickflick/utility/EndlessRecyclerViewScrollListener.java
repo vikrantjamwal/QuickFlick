@@ -1,4 +1,4 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.utility;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

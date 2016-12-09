@@ -1,4 +1,9 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.network;
+
+import com.vik.android.quickflick.pojo.MovieItem;
+import com.vik.android.quickflick.pojo.Result;
+import com.vik.android.quickflick.pojo.ReviewResult;
+import com.vik.android.quickflick.pojo.TrailerResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -7,7 +12,7 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
     @GET("popular")
-    Call<Result> getPopularMovies(@Query("page") int page,@Query("api_key") String apiKey);
+    Call<Result> getPopularMovies(@Query("page") int page, @Query("api_key") String apiKey);
 
     @GET("top_rated")
     Call<Result> getTopRatedMovies(@Query("page") int page,@Query("api_key") String apiKey);

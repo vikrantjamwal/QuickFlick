@@ -1,4 +1,4 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.pojo;
 
 import android.os.Parcel;
 import android.os.Parcelable;

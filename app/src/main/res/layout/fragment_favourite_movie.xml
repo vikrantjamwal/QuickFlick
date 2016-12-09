@@ -4,9 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.vik.android.quickflick.FavouriteMovieFragment">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/favouriteMovieList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Favourite Movies" />
+        android:clipToPadding="false"
+        android:padding="@dimen/item_offset"/>
 
 </FrameLayout>

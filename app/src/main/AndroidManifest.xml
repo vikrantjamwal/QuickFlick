@@ -23,6 +23,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <provider
+            android:name=".data.MovieProvider"
+            android:authorities="com.vik.android.quickflick"
+            android:exported="false" />
     </application>
 
 </manifest>

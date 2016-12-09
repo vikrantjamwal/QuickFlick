@@ -1,4 +1,4 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.pojo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

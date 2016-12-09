@@ -1,4 +1,4 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,13 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.vik.android.quickflick.R;
+import com.vik.android.quickflick.pojo.Review;
+
 import java.util.ArrayList;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
     private ArrayList<Review> mReviews = new ArrayList<>();
 
-    void setReviews(ArrayList<Review> reviews){
+    public void setReviews(ArrayList<Review> reviews){
         this.mReviews = reviews;
 
         notifyItemInserted(reviews.size()-1);

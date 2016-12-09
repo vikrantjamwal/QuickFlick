@@ -1,4 +1,4 @@
-package com.vik.android.quickflick;
+package com.vik.android.quickflick.utility;
 
 import android.content.Context;
 import android.graphics.Rect;

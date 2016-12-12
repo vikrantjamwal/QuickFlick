@@ -30,8 +30,7 @@ public class MovieProvider extends ContentProvider {
     }
 
     @Override
-    public boolean onCreate()
-    {
+    public boolean onCreate() {
         mDbHelper = new MovieDbHelper(getContext());
 
         return true;
@@ -53,13 +52,14 @@ public class MovieProvider extends ContentProvider {
                 break;
             case MOVIE_ID:
                 selection = MovieEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 cursor = database.query(MovieEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -77,7 +77,7 @@ public class MovieProvider extends ContentProvider {
                     Log.e(LOG_TAG, "Failed to insert row for " + uri);
                     return null;
                 }
-
+                getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(uri, id);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -86,22 +86,31 @@ public class MovieProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Get writable database
-        SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case MOVIES:
                 // Delete all rows that match the selection and selection args
-                return database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                return deleteMovie(uri, selection, selectionArgs);
             case MOVIE_ID:
                 // Delete a single row given by the ID in the URI
                 selection = MovieEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                return deleteMovie(uri, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
+    }
+
+    private int deleteMovie(Uri uri, String selection, String[] selectionArgs) {
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        int rowsDeleted = database.delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rowsDeleted;
     }
 
     @Override

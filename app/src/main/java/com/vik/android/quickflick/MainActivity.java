@@ -15,9 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(findViewById(R.id.movie_detail_container) != null){
-
             TWO_PANE = true;
-
         }else {
             TWO_PANE = false;
         }

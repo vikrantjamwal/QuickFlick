@@ -15,10 +15,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     private ArrayList<Review> mReviews = new ArrayList<>();
 
-    public void setReviews(ArrayList<Review> reviews){
+    public void setReviews(ArrayList<Review> reviews) {
         this.mReviews = reviews;
 
-        notifyItemInserted(reviews.size()-1);
+        notifyItemInserted(reviews.size() - 1);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         return mReviews.size();
     }
 
-    class ReviewViewHolder extends RecyclerView.ViewHolder{
+    class ReviewViewHolder extends RecyclerView.ViewHolder {
 
         TextView reviewHeader, reviewBody;
 

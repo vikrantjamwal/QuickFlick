@@ -2,6 +2,7 @@ package com.vik.android.quickflick;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,7 +27,6 @@ import com.vik.android.quickflick.adapters.TrailerAdapter;
 import com.vik.android.quickflick.data.MovieContract.MovieEntry;
 import com.vik.android.quickflick.network.ApiClient;
 import com.vik.android.quickflick.network.ApiInterface;
-import com.vik.android.quickflick.pojo.Movie;
 import com.vik.android.quickflick.pojo.MovieItem;
 import com.vik.android.quickflick.pojo.Review;
 import com.vik.android.quickflick.pojo.ReviewResult;
@@ -55,11 +55,21 @@ public class MovieDetailFragment extends Fragment {
 
     ApiInterface apiService;
 
-    Movie mMovie = null;
+    MovieItem mMovieItem = null;
 
-    ImageView mMoviePoster;
+    int mMovie_Id = -1;
 
-    TextView mMovieTitle, mRating, mReleaseDate, mDuration, mGenre, mOverview, mReviewHeading;
+    ImageView mMoviePoster, mBackdropImage, ratingStar;
+
+    TextView mMovieTitle, mRating, mReleaseDate, mDuration, mGenre, mOverview, mReviewHeading, mOverviewHeading, mTrailerHeading;
+
+    CollapsingToolbarLayout collapsingToolbar;
+
+    FloatingActionButton fab;
+
+    boolean isPresent = false;
+
+    long primaryKey = -1;
 
     public MovieDetailFragment() {
         // Required empty public constructor
@@ -68,13 +78,35 @@ public class MovieDetailFragment extends Fragment {
     View.OnClickListener fabClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ContentValues values = new ContentValues();
-            values.put(MovieEntry.COLUMN_MOVIE_TITLE, mMovie.getOriginalTitle());
-            values.put(MovieEntry.COLUMN_MOVIE_ID, mMovie.getId());
-            values.put(MovieEntry.COLUMN_MOVIE_POSTER, mMovie.getPosterPath());
 
-            Uri rowId = getActivity().getContentResolver().insert(MovieEntry.CONTENT_URI, values);
-            Toast.makeText(getActivity(), "Fab is pressed "+ContentUris.parseId(rowId), Toast.LENGTH_SHORT).show();
+            int rowDeleted = 0;
+
+            if (isPresent && primaryKey != -1) {
+                Uri uri = ContentUris.withAppendedId(MovieEntry.CONTENT_URI, primaryKey);
+                rowDeleted = getActivity().getContentResolver().delete(uri, null, null);
+                if (rowDeleted != 0) {
+                    Toast.makeText(getActivity(), "Movie removed from Favourites", Toast.LENGTH_SHORT).show();
+                    isPresent = false;
+                    fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+                }
+            } else {
+                String movieName = mMovieItem.getOriginalTitle();
+                int movieId = mMovieItem.getId();
+                String moviePosterPath = mMovieItem.getPosterPath();
+
+                ContentValues values = new ContentValues();
+                values.put(MovieEntry.COLUMN_MOVIE_TITLE, movieName);
+                values.put(MovieEntry.COLUMN_MOVIE_ID, movieId);
+                values.put(MovieEntry.COLUMN_MOVIE_POSTER, moviePosterPath);
+
+                Uri rowId = getActivity().getContentResolver().insert(MovieEntry.CONTENT_URI, values);
+                if (ContentUris.parseId(rowId) != -1) {
+                    Toast.makeText(getActivity(), "Movie added to Favourites", Toast.LENGTH_SHORT).show();
+                    isPresent = true;
+                    primaryKey = ContentUris.parseId(rowId);
+                    fab.setImageResource(R.drawable.ic_favorite_white_24dp);
+                }
+            }
         }
     };
 
@@ -83,27 +115,23 @@ public class MovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Bundle arguments = getArguments();
-        if(arguments != null){
-            mMovie = arguments.getParcelable("movie_key");
+        if (arguments != null) {
+            mMovie_Id = arguments.getInt("movie");
         }
 
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(fabClickListener);
 
-        if(mMovie != null) {
+        if (mMovie_Id != -1) {
 
             final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            CollapsingToolbarLayout collapsingToolbar =
-                    (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
-            collapsingToolbar.setTitle(mMovie.getOriginalTitle());
-
-            ImageView imageView = (ImageView) rootView.findViewById(R.id.backdrop);
-            Glide.with(getActivity()).load("http://image.tmdb.org/t/p/w780" + mMovie.getBackdropPath()).into(imageView);
+            collapsingToolbar = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
+            collapsingToolbar.setTitle(" ");
 
             trailerRecyclerView = (RecyclerView) rootView.findViewById(R.id.video_recycler_view);
             trailerAdapter = new TrailerAdapter(getActivity());
@@ -120,27 +148,32 @@ public class MovieDetailFragment extends Fragment {
             reviewRecyclerView.setAdapter(reviewAdapter);
             reviewRecyclerView.addItemDecoration(itemDecoration);
 
+            mBackdropImage = (ImageView) rootView.findViewById(R.id.backdrop);
             mMoviePoster = (ImageView) rootView.findViewById(R.id.movie_detail_poster);
             mMovieTitle = (TextView) rootView.findViewById(R.id.movie_detail_title);
+            ratingStar = (ImageView) rootView.findViewById(R.id.rating_image);
             mRating = (TextView) rootView.findViewById(R.id.movie_detail_rating);
             mReleaseDate = (TextView) rootView.findViewById(R.id.movie_detail_release);
             mDuration = (TextView) rootView.findViewById(R.id.movie_detail_duration);
             mGenre = (TextView) rootView.findViewById(R.id.movie_detail_genre);
             mOverview = (TextView) rootView.findViewById(R.id.movie_detail_overview);
             mReviewHeading = (TextView) rootView.findViewById(R.id.review_text);
+            mOverviewHeading = (TextView) rootView.findViewById(R.id.overview_title);
+            mTrailerHeading = (TextView) rootView.findViewById(R.id.trailer_title);
             mMovieTitle.setSelected(true);
             mReleaseDate.setSelected(true);
             mGenre.setSelected(true);
 
             apiService = ApiClient.getClient().create(ApiInterface.class);
 
-            Call<MovieItem> call = apiService.getMovieDetails(mMovie.getId(), ApiClient.API_KEY);
+            Call<MovieItem> call = apiService.getMovieDetails(mMovie_Id, ApiClient.API_KEY);
             call.enqueue(new Callback<MovieItem>() {
                 @Override
                 public void onResponse(Call<MovieItem> call, Response<MovieItem> response) {
-                    MovieItem movieItem = response.body();
-                    if (movieItem != null) {
-                        generateLayout(movieItem);
+                    mMovieItem = response.body();
+                    if (mMovieItem != null) {
+                        isPresentInDB(mMovieItem);
+                        generateLayout(mMovieItem);
                     }
                 }
 
@@ -153,17 +186,50 @@ public class MovieDetailFragment extends Fragment {
             });
 
         }
-
         return rootView;
     }
 
-    private void generateLayout(MovieItem movieItem) {
-
-        String url = "http://image.tmdb.org/t/p/w342" + movieItem.getPosterPath();
-        if (isAdded()) {
-            Glide.with(getActivity()).load(url).into(mMoviePoster);
+    private void isPresentInDB(MovieItem movieItem) {
+        String[] projection = {
+                MovieEntry._ID,
+                MovieEntry.COLUMN_MOVIE_ID,
+        };
+        Cursor cursor = null;
+        if(isAdded()) {
+            cursor = getActivity().getContentResolver().query(MovieEntry.CONTENT_URI, projection, null, null, null);
         }
+        try {
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    int id = cursor.getInt(cursor.getColumnIndex(MovieEntry.COLUMN_MOVIE_ID));
+                    if (id == movieItem.getId()) {
+                        primaryKey = cursor.getInt(cursor.getColumnIndex(MovieEntry._ID));
+                        isPresent = true;
+                        return;
+                    }
+                }
+            }
+        } finally {
+            if(cursor!=null)
+                cursor.close();
+        }
+    }
+
+    private void generateLayout(MovieItem movieItem) {
+        mOverviewHeading.setVisibility(View.VISIBLE);
+        collapsingToolbar.setTitle(movieItem.getOriginalTitle());
+        if (isAdded()) {
+            Glide.with(getActivity()).load("http://image.tmdb.org/t/p/w780" + movieItem.getBackdropPath()).into(mBackdropImage);
+            Glide.with(getActivity()).load("http://image.tmdb.org/t/p/w342" + movieItem.getPosterPath()).into(mMoviePoster);
+        }
+        if (isPresent) {
+            fab.setImageResource(R.drawable.ic_favorite_white_24dp);
+        } else {
+            fab.setImageResource(R.drawable.ic_favorite_border_white_24dp);
+        }
+        fab.setVisibility(View.VISIBLE);
         mMovieTitle.setText(movieItem.getOriginalTitle());
+        ratingStar.setVisibility(View.VISIBLE);
         mRating.setText(String.valueOf(movieItem.getVoteAverage()));
         Date date = null;
         try {
@@ -188,12 +254,13 @@ public class MovieDetailFragment extends Fragment {
         }
         mOverview.setText(movieItem.getOverview());
 
-        Call<TrailerResult> call = apiService.getMovieTrailers(mMovie.getId(), ApiClient.API_KEY);
+        Call<TrailerResult> call = apiService.getMovieTrailers(mMovie_Id, ApiClient.API_KEY);
         call.enqueue(new Callback<TrailerResult>() {
             @Override
             public void onResponse(Call<TrailerResult> call, Response<TrailerResult> response) {
                 ArrayList<Trailer> trailers = response.body().getTrailers();
                 if (trailers != null && !trailers.isEmpty()) {
+                    mTrailerHeading.setVisibility(View.VISIBLE);
                     trailerAdapter.setTrailers(trailers);
                 }
             }
@@ -204,14 +271,14 @@ public class MovieDetailFragment extends Fragment {
             }
         });
 
-        Call<ReviewResult> reviewResultCall = apiService.getMovieReviews(mMovie.getId(), ApiClient.API_KEY);
+        Call<ReviewResult> reviewResultCall = apiService.getMovieReviews(mMovie_Id, ApiClient.API_KEY);
         reviewResultCall.enqueue(new Callback<ReviewResult>() {
             @Override
             public void onResponse(Call<ReviewResult> call, Response<ReviewResult> response) {
                 ArrayList<Review> reviews = response.body().getReviews();
-                if(reviews!=null && !reviews.isEmpty()){
+                if (reviews != null && !reviews.isEmpty()) {
                     reviewAdapter.setReviews(reviews);
-                    mReviewHeading.setText("Reviews");
+                    mReviewHeading.setText(R.string.review);
                 }
             }
 

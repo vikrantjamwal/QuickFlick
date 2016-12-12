@@ -3,9 +3,9 @@ package com.vik.android.quickflick.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-public final class MovieContract{
+public final class MovieContract {
 
-    private MovieContract(){
+    private MovieContract() {
     }
 
     public static final String CONTENT_AUTHORITY = "com.vik.android.quickflick";

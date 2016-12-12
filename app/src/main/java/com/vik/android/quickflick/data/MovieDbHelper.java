@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.vik.android.quickflick.data.MovieContract.MovieEntry;
 
-public class MovieDbHelper extends SQLiteOpenHelper{
+public class MovieDbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "favourite.db";
 
-    public MovieDbHelper(Context context){
+    public MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -20,7 +20,7 @@ public class MovieDbHelper extends SQLiteOpenHelper{
         String SQL_CREATE_TABLE = "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                 MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MovieEntry.COLUMN_MOVIE_TITLE + " TEXT," +
-                MovieEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL," +
+                MovieEntry.COLUMN_MOVIE_ID + " INTEGER," +
                 MovieEntry.COLUMN_MOVIE_POSTER + " TEXT);";
 
         db.execSQL(SQL_CREATE_TABLE);

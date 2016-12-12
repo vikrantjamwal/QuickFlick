@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.vik.android.quickflick.adapters.MovieAdapter;
 import com.vik.android.quickflick.network.ApiClient;
@@ -56,12 +56,6 @@ public class TopRatedMovieFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.topRatedMovieList);
         movieAdapter = new MovieAdapter(getActivity());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), Utility.calculateNoOfColumns(getActivity()));
-//        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-//            gridLayoutManager = new GridLayoutManager(getActivity(), 3);
-//        }
-//        else{
-//            gridLayoutManager = new GridLayoutManager(getActivity(), 5);
-//        }
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(movieAdapter);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getActivity(), R.dimen.item_offset);
@@ -86,7 +80,9 @@ public class TopRatedMovieFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<Result> call, Throwable t) {
-                    Log.e(LOG_TAG, t.toString());
+                    if(isAdded()) {
+                        Toast.makeText(getActivity(), "Connection Error!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
@@ -111,7 +107,6 @@ public class TopRatedMovieFragment extends Fragment {
     }
 
     public void loadNextDataFromApi(int offset) {
-        Log.e("GAG", "" + offset);
         Call<Result> call = apiService.getTopRatedMovies(offset, ApiClient.API_KEY);
         call.enqueue(new Callback<Result>() {
             @Override
@@ -125,7 +120,9 @@ public class TopRatedMovieFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Log.e(LOG_TAG, t.toString());
+                if(isAdded()) {
+                    Toast.makeText(getActivity(), "Connection Error!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

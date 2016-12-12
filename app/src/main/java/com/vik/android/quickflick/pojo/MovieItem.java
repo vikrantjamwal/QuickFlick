@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 public class MovieItem {
 
+    @SerializedName("backdrop_path")
+    @Expose
+    private String backdropPath;
     @SerializedName("genres")
     @Expose
     private ArrayList<Genre> genres = new ArrayList<Genre>();
@@ -39,12 +42,12 @@ public class MovieItem {
     private double voteAverage;
 
 
-    public ArrayList<Genre> getGenres() {
-        return genres;
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
-    public void setGenres(ArrayList<Genre> genres) {
-        this.genres = genres;
+    public ArrayList<Genre> getGenres() {
+        return genres;
     }
 
     public int getId() {
@@ -55,68 +58,32 @@ public class MovieItem {
         this.id = id;
     }
 
-    public String getImdbId() {
-        return imdbId;
-    }
-
-    public void setImdbId(String imdbId) {
-        this.imdbId = imdbId;
-    }
-
     public String getOriginalTitle() {
         return originalTitle;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
     }
 
     public String getOverview() {
         return overview;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
     public String getPosterPath() {
         return posterPath;
-    }
-
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
     }
 
     public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public int getRuntime() {
         return runtime;
-    }
-
-    public void setRuntime(int runtime) {
-        this.runtime = runtime;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public double getVoteAverage() {
         return voteAverage;
-    }
-
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
     }
 
 }

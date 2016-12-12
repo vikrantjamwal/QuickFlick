@@ -12,12 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.vik.android.quickflick.MainActivity;
-import com.vik.android.quickflick.pojo.Movie;
 import com.vik.android.quickflick.MovieDetailActivity;
 import com.vik.android.quickflick.MovieDetailFragment;
 import com.vik.android.quickflick.R;
+import com.vik.android.quickflick.pojo.Movie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +26,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private List<Movie> mMovies = new ArrayList<Movie>();
     private Context mContext;
 
-    public MovieAdapter(Context context){
+    public MovieAdapter(Context context) {
         this.mContext = context;
     }
 
     public void setMovies(ArrayList<Movie> movies) {
         this.mMovies = movies;
         //update the adapter to reflect the new set of movies
-        notifyItemInserted(movies.size()-1);
+        notifyItemInserted(movies.size() - 1);
     }
 
     @Override
@@ -47,26 +46,26 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(final MovieViewHolder holder, int position) {
         Movie movie = mMovies.get(position);
-        String url = "http://image.tmdb.org/t/p/w342"+movie.getPosterPath();
-        Glide.with(mContext).load(url).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.posterImage);
+        String url = "http://image.tmdb.org/t/p/w342" + movie.getPosterPath();
+        Glide.with(mContext).load(url).placeholder(R.drawable.ic_priority_high_black_24dp).dontAnimate().into(holder.posterImage);
 
         holder.posterImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("ABC", mMovies.get(holder.getAdapterPosition()).getOriginalTitle());
-                if(MainActivity.TWO_PANE){
+                if (MainActivity.TWO_PANE) {
                     Bundle args = new Bundle();
-                    args.putParcelable("movie", mMovies.get(holder.getAdapterPosition()));
+                    args.putInt("movie", mMovies.get(holder.getAdapterPosition()).getId());
 
                     MovieDetailFragment fragment = new MovieDetailFragment();
                     fragment.setArguments(args);
 
-                    ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
+                    ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
                             .replace(R.id.movie_detail_container, fragment, MainActivity.DETAILFRAGMENT_TAG)
                             .commit();
-                }else {
+                } else {
                     Intent intent = new Intent(mContext, MovieDetailActivity.class);
-                    intent.putExtra("movie_key", mMovies.get(holder.getAdapterPosition()));
+                    intent.putExtra("movie_key", mMovies.get(holder.getAdapterPosition()).getId());
                     mContext.startActivity(intent);
                 }
             }
@@ -78,7 +77,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mMovies.size();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder{
+    class MovieViewHolder extends RecyclerView.ViewHolder {
 
         ImageView posterImage;
 

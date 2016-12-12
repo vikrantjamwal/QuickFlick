@@ -15,19 +15,19 @@ import com.vik.android.quickflick.pojo.Trailer;
 
 import java.util.ArrayList;
 
-public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder>{
+public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
 
     private ArrayList<Trailer> mTrailers = new ArrayList<>();
     private Context mContext;
 
-    public TrailerAdapter(Context context){
+    public TrailerAdapter(Context context) {
         this.mContext = context;
     }
 
-    public void setTrailers(ArrayList<Trailer> trailers){
+    public void setTrailers(ArrayList<Trailer> trailers) {
         this.mTrailers = trailers;
 
-        notifyItemInserted(trailers.size()-1);
+        notifyItemInserted(trailers.size() - 1);
     }
 
     @Override
@@ -40,7 +40,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     @Override
     public void onBindViewHolder(final TrailerViewHolder holder, int position) {
         Trailer trailer = mTrailers.get(position);
-        //String url = "https://i.ytimg.com/vi/" + trailer.getKey() + "/hqdefault.jpg";
         String url = "https://img.youtube.com/vi/" + trailer.getKey() + "/mqdefault.jpg";
         Glide.with(mContext).load(url).into(holder.trailerImage);
 

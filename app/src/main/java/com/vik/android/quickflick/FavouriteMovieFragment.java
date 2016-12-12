@@ -14,13 +14,14 @@ import android.view.ViewGroup;
 
 import com.vik.android.quickflick.data.MovieContract.MovieEntry;
 import com.vik.android.quickflick.utility.ItemOffsetDecoration;
+import com.vik.android.quickflick.adapters.RecyclerCursorAdapter;
 import com.vik.android.quickflick.utility.Utility;
 
 public class FavouriteMovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     RecyclerView recyclerView;
 
-    MyCursorAdapter myCursorAdapter;
+    RecyclerCursorAdapter myRecyclerAdapter;
 
     public FavouriteMovieFragment() {
 
@@ -33,10 +34,10 @@ public class FavouriteMovieFragment extends Fragment implements LoaderManager.Lo
         View rootView = inflater.inflate(R.layout.fragment_favourite_movie, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.favouriteMovieList);
-        myCursorAdapter = new MyCursorAdapter(getActivity(), null);
+        myRecyclerAdapter = new RecyclerCursorAdapter(getActivity(), null);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), Utility.calculateNoOfColumns(getActivity()));
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(myCursorAdapter);
+        recyclerView.setAdapter(myRecyclerAdapter);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getActivity(), R.dimen.item_offset);
         recyclerView.addItemDecoration(itemDecoration);
 
@@ -58,11 +59,11 @@ public class FavouriteMovieFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        myCursorAdapter.swapCursor(data);
+        myRecyclerAdapter.changeCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        myCursorAdapter.swapCursor(null);
+        myRecyclerAdapter.changeCursor(null);
     }
 }

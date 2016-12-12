@@ -51,7 +51,8 @@
                     android:layout_marginTop="3dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/star"
-                    android:tint="@color/colorAccent" />
+                    android:tint="@color/colorAccent"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/movie_detail_rating"
@@ -97,13 +98,15 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/overview_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:fontFamily="cursive"
-        android:text="Overview"
+        android:text="@string/overview"
         android:textAppearance="?android:textAppearanceLarge"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/movie_detail_overview"
@@ -113,18 +116,20 @@
         android:fontFamily="casual" />
 
     <TextView
+        android:id="@+id/trailer_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="cursive"
-        android:text="Trailers"
         android:layout_marginBottom="10dp"
-        android:textAppearance="?android:textAppearanceLarge" />
+        android:fontFamily="cursive"
+        android:text="@string/trailers"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/video_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_btw_headers"/>
+        android:layout_marginBottom="@dimen/margin_btw_headers" />
 
     <TextView
         android:id="@+id/review_text"

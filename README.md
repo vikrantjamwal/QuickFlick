@@ -34,3 +34,7 @@ In this project i will build a fully featured application that looks and feels n
 Add the following lines in `gradle.properties` file :
 
     themoviedbkey = "[KEY]"
+    
+Note:- Get api key from [TMDb]
+
+[TMDb]:https://www.themoviedb.org/
